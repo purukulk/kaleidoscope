@@ -1,0 +1,1 @@
+cmd_/home/skrtbhtngr/KP/hello.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/hello.ko /home/skrtbhtngr/KP/hello.o /home/skrtbhtngr/KP/hello.mod.o ;  true
