@@ -1,0 +1,1 @@
+cmd_/home/skrtbhtngr/KP/search_mod.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/search_mod.ko /home/skrtbhtngr/KP/search_mod.o /home/skrtbhtngr/KP/search_mod.mod.o ;  true

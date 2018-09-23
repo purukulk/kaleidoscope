@@ -1,0 +1,65 @@
+#include<linux/fdtable.h>
+#include<linux/jiffies.h>
+#include<linux/module.h>
+#include<linux/sched.h>
+#include<linux/sched/signal.h>
+
+int init_module(void)
+{
+    struct task_struct *task;
+
+    for_each_process(task)
+    {
+        printk("\n%5s %5s %15s %10s %10s %10s %10s %10s %10s %10s %5s %5s %10s %10s %5s %5s %5s %5s %10s %5s\n",
+               "PID",
+               "PPID",
+               "Name",
+               "User Time",
+               "Sys Time",
+               "Avg Load",
+               "Avg Util",
+               "EWMA Util",
+               "Start Time",
+               "RSt Time",
+               "Total",
+               "Prio",
+               "Static",
+               "Normal",
+               "Nice",
+               "UID",
+               "GID",
+               "CPU",
+               "flags",
+               "Files"
+               );
+        printk("%5d %5d %15s %10u %10u %10lu %10lu %10u %10llu %10llu %5llu %5d %10d %10d %5d %5u %5u %5u %10X %5d\n",
+               task->pid,
+               task->parent->pid,
+               task->comm,
+               jiffies_to_msecs(task->utime)/1000,
+               jiffies_to_msecs(task->stime)/1000,
+               task->se.avg.load_avg,
+               task->se.avg.util_avg,
+               task->se.avg.util_est.ewma,
+               task->start_time/(60UL * 60UL * 1000000000UL),
+               task->real_start_time/(60UL * 60UL * 1000000000UL),
+               task->cputime_expires.sum_exec_runtime,
+               task->prio,
+               task->static_prio,
+               task->normal_prio,
+               task_nice(task),
+               task->cred->uid.val,
+               task->cred->gid.val,
+               task_cpu(task),
+               task->flags,
+               task->files->count.counter
+               );
+    }
+
+    return 0;
+}
+
+void cleanup_module(void)
+{
+    printk(KERN_INFO "Exiting module!\n");
+}

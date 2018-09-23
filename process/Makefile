@@ -1,9 +1,10 @@
-obj-m += hello.o
-obj-m += version.o
-obj-m += minmax3.o
-obj-m += metadata.o
-obj-m += search_mod.o
-obj-m += list.o
+obj-m += current.o
+obj-m += family.o
+obj-m += three.o
+obj-m += numproc.o
+obj-m += files.o
+obj-m += ps.o
+obj-m += pid.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
