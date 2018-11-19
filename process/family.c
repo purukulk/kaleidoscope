@@ -14,20 +14,22 @@ int init_module(void)
             break;
     }
 
+    i = task;
+
     printk(KERN_INFO "Current: name: %s, pid: %d", task->comm, task->pid);
     do
     {
-        task = task->parent;
-        printk(KERN_INFO "Parent: name: %s, pid: %d\n", task->comm, task->pid);
+        i = i->parent;
+        printk(KERN_INFO "Parent: name: %s, pid: %d\n", i->comm, i->pid);
         
-    } while(task->pid != 0);
+    } while(i->pid != 0);
 
-    list_for_each_entry(i, &task->sibling, sibling)
+    list_for_each_entry(i, &task->parent->children, sibling)
     {
         printk(KERN_INFO "Sibling: name: %s, pid: %d\n", i->comm, i->pid);
     }
 
-    list_for_each_entry(i, &task->children, children)
+    list_for_each_entry(i, &task->children, sibling)
     {
         printk(KERN_INFO "Children: name: %s, pid: %d\n", i->comm, i->pid);
     }

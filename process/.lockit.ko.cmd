@@ -1,0 +1,1 @@
+cmd_/home/skrtbhtngr/KP/process/lockit.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/process/lockit.ko /home/skrtbhtngr/KP/process/lockit.o /home/skrtbhtngr/KP/process/lockit.mod.o ;  true

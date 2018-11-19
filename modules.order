@@ -4,3 +4,14 @@ kernel//home/skrtbhtngr/KP/minmax3.ko
 kernel//home/skrtbhtngr/KP/metadata.ko
 kernel//home/skrtbhtngr/KP/search_mod.ko
 kernel//home/skrtbhtngr/KP/list.ko
+kernel//home/skrtbhtngr/KP/crash.ko
+kernel//home/skrtbhtngr/KP/datetime.ko
+kernel//home/skrtbhtngr/KP/export.ko
+kernel//home/skrtbhtngr/KP/export_2.ko
+kernel//home/skrtbhtngr/KP/array.ko
+kernel//home/skrtbhtngr/KP/sort.ko
+kernel//home/skrtbhtngr/KP/elaptime.ko
+kernel//home/skrtbhtngr/KP/log.ko
+kernel//home/skrtbhtngr/KP/nsyscalls.ko
+kernel//home/skrtbhtngr/KP/sizes.ko
+kernel//home/skrtbhtngr/KP/cr.ko

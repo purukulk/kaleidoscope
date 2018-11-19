@@ -1,0 +1,1 @@
+cmd_/home/skrtbhtngr/KP/process/sigkill.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/process/sigkill.ko /home/skrtbhtngr/KP/process/sigkill.o /home/skrtbhtngr/KP/process/sigkill.mod.o ;  true

@@ -1,0 +1,8 @@
+kernel//home/skrtbhtngr/KP/memory/vma.ko
+kernel//home/skrtbhtngr/KP/memory/numproc.ko
+kernel//home/skrtbhtngr/KP/memory/read_kmem.ko
+kernel//home/skrtbhtngr/KP/memory/pc.ko
+kernel//home/skrtbhtngr/KP/memory/buddy.ko
+kernel//home/skrtbhtngr/KP/memory/rss.ko
+kernel//home/skrtbhtngr/KP/memory/mmap.ko
+kernel//home/skrtbhtngr/KP/memory/lock.ko

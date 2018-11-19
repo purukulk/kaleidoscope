@@ -1,0 +1,1 @@
+cmd_/home/skrtbhtngr/KP/memory/mmap.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/memory/mmap.ko /home/skrtbhtngr/KP/memory/mmap.o /home/skrtbhtngr/KP/memory/mmap.mod.o ;  true

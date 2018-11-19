@@ -1,0 +1,46 @@
+#include <linux/mm.h>
+#include <linux/module.h>
+#include <linux/pid.h>
+#include <linux/sched.h>
+#include <linux/sched/signal.h>
+
+int pid;
+
+int init_module(void)
+{
+    int ret, lckd = 1;
+    struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
+    void (*sighandler)(int);
+
+    if(task == NULL)
+    {
+        printk("Invalid PID!\n");
+        return 0;
+    }
+    printk(KERN_INFO "Task: name: %s, pid: %d\n", task->comm, task->pid);
+
+    sighandler = task->sighand->action[SIGINT - 1].sa.sa_handler;
+    if(sighandler != NULL)
+    {
+//        ret = get_user_pages_remote(task, task->mm, (unsigned long) sighandler, 1, 0,
+//                                    NULL, &task->mm->mmap, &lckd);
+        printk("%lx %p\n", (unsigned long) sighandler, sighandler);
+//        if(ret >= 1)
+//            sighandler(SIGINT);
+//        else if(ret == 0)
+//            printk("<1 pages pinned!\n");
+    }
+    sighandler = task->sighand->action[SIGHUP - 1].sa.sa_handler;
+    if(sighandler != NULL)
+        printk("%lx %p\n", (unsigned long) sighandler, sighandler);
+    return 0;
+}
+
+void cleanup_module(void)
+{
+    printk(KERN_INFO "Exiting module!\n");
+}
+
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "an integer variable");
+MODULE_LICENSE("GPL v2");
