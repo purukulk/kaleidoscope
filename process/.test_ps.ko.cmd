@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/process/test_ps.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/process/test_ps.ko /home/skrtbhtngr/KP/process/test_ps.o /home/skrtbhtngr/KP/process/test_ps.mod.o ;  true

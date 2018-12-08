@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/cr.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/cr.ko /home/skrtbhtngr/KP/cr.o /home/skrtbhtngr/KP/cr.mod.o ;  true

@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/process/files.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/process/files.ko /home/skrtbhtngr/KP/process/files.o /home/skrtbhtngr/KP/process/files.mod.o ;  true

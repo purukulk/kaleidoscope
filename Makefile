@@ -15,6 +15,7 @@ obj-m += log.o
 obj-m += nsyscalls.o
 obj-m += sizes.o
 obj-m += cr.o
+obj-m += current.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

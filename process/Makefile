@@ -17,6 +17,8 @@ obj-m += exit.o
 obj-m += threads.o
 obj-m += kthr_atomic.o
 obj-m += temp.o
+obj-m += child_testing.o
+obj-m += pids.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

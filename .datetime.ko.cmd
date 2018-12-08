@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/datetime.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/datetime.ko /home/skrtbhtngr/KP/datetime.o /home/skrtbhtngr/KP/datetime.mod.o ;  true

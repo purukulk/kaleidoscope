@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/minmax3.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/minmax3.ko /home/skrtbhtngr/KP/minmax3.o /home/skrtbhtngr/KP/minmax3.mod.o ;  true

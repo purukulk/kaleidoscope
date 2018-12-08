@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/memory/rss.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/memory/rss.ko /home/skrtbhtngr/KP/memory/rss.o /home/skrtbhtngr/KP/memory/rss.mod.o ;  true

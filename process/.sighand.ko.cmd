@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/process/sighand.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/process/sighand.ko /home/skrtbhtngr/KP/process/sighand.o /home/skrtbhtngr/KP/process/sighand.mod.o ;  true

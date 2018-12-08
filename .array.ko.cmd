@@ -1,1 +1,0 @@
-cmd_/home/skrtbhtngr/KP/array.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/skrtbhtngr/KP/array.ko /home/skrtbhtngr/KP/array.o /home/skrtbhtngr/KP/array.mod.o ;  true

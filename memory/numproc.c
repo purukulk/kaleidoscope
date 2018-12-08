@@ -1,3 +1,7 @@
+
+// Linux Kaleidoscope v0.1 
+// Ex. 6.1
+
 #include<linux/module.h>
 #include<linux/sched.h>
 #include<linux/sched/signal.h>
