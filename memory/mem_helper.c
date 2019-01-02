@@ -16,7 +16,7 @@ int main()
     {
         for(i = 0; i < LEN; i++)
             arr[i] = rand();
-//        getchar();
+        //getchar();
     }
     return 0;
 }

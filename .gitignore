@@ -1,2 +1,10 @@
 *.out
-
+*.o
+*.mod.c
+*.mod.o
+*.ko
+*.swp
+*.swo
+TODO
+.tmp_versions/*
+Module.symvers

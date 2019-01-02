@@ -1,12 +1,12 @@
-#include<linux/module.h>
-#include<linux/time.h>
+#include <linux/module.h>
+#include <linux/time.h>
 
-int init_module(void)
+int __init init_module(void)
 {
     struct tm tm;
     struct timeval tv;
     do_gettimeofday(&tv);
-    time_to_tm(tv.tv_sec, +330*60, &tm);
+    time_to_tm(tv.tv_sec, +330 * 60, &tm);
     printk("Second: %d\n", tm.tm_sec);
     printk("Minute: %d\n", tm.tm_min);
     printk("Hour: %d\n", tm.tm_hour);
@@ -18,7 +18,10 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
-    printk(KERN_INFO "Exiting module...\n"); 
+    printk(KERN_INFO "Exiting module...\n");
 }
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

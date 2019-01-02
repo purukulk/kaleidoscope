@@ -1,5 +1,5 @@
-#include<linux/module.h>
-#include<linux/slab.h>
+#include <linux/module.h>
+#include <linux/slab.h>
 
 #define WORD_SIZE 64
 #define LEN_STR WORD_SIZE + 16
@@ -37,15 +37,16 @@ char *long_to_binary(unsigned long dec)
     return bin;
 }
 
-int init_module(void)
+int __init init_module(void)
 {
     unsigned long cr0, cr2, cr3, cr4, cr8;
-    asm volatile("mov %%cr0,%0\n\t" : "=r" (cr0));
-    asm volatile("mov %%cr2,%0\n\t" : "=r" (cr2));
-    asm volatile("mov %%cr3,%0\n\t" : "=r" (cr3));
-    asm volatile("mov %%cr4,%0\n\t" : "=r" (cr4));
-    asm volatile("movq %%cr8,%0" : "=r" (cr8));
-    printk("CR0: 0x%lx, CR2: 0x%lx, CR3: 0x%lx, CR4: 0x%lx, CR8: 0x%lx\n", cr0, cr2, cr3, cr4, cr8);
+    asm volatile("mov %%cr0,%0\n\t" : "=r"(cr0));
+    asm volatile("mov %%cr2,%0\n\t" : "=r"(cr2));
+    asm volatile("mov %%cr3,%0\n\t" : "=r"(cr3));
+    asm volatile("mov %%cr4,%0\n\t" : "=r"(cr4));
+    asm volatile("movq %%cr8,%0" : "=r"(cr8));
+    printk("CR0: 0x%lx, CR2: 0x%lx, CR3: 0x%lx, CR4: 0x%lx, CR8: 0x%lx\n", cr0, cr2, cr3,
+           cr4, cr8);
     printk("CR0: %s\n", long_to_binary(cr0));
     printk("CR2: %s\n", long_to_binary(cr2));
     printk("CR3: %s\n", long_to_binary(cr3));
@@ -54,7 +55,10 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
-    printk(KERN_INFO "Exiting module...\n"); 
+    printk(KERN_INFO "Exiting module...\n");
 }
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

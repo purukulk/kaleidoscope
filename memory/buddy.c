@@ -5,7 +5,7 @@
 
 #define ARR_LEN 50
 #define NUM_PAGES 4
-#define TOTAL_MEM NUM_PAGES * PAGE_SIZE
+#define TOTAL_MEM NUM_PAGES *PAGE_SIZE
 #define TOTAL_MEM_ORDER 14
 #define MIN_ALLOC_SIZE 64
 
@@ -16,7 +16,7 @@ struct node
     bool full;
     struct node *left;
     struct node *right;
-} *root;
+} * root;
 
 void *addr;
 int arr[ARR_LEN];
@@ -33,38 +33,41 @@ void setup_buddy()
 
 int alloc(struct node *n, int size, char *addr)
 {
-    int ret = 0;
+    int ret = -1;
+
     if(n->full == true || n->size < size)
-    {
-        printk("%u %u\n", n->size, size);
-        return 0;
-    }
-    if(size > n->size / 2 || n->size == MIN_ALLOC_SIZE)
+        return -1;
+
+    if((size > n->size / 2 || n->size == MIN_ALLOC_SIZE)
+            && n->left == NULL && n->right == NULL)
     {
         n->full = true;
         n->len = size;
         int_frag += n->size - size;
         memset(addr, '1', size);
-        return addr;
+        return 0;
     }
+
     if(n->left == NULL)
     {
         n->left = kzalloc(sizeof(struct node), GFP_KERNEL);
         n->left->size = n->size / 2;
         n->right = kzalloc(sizeof(struct node), GFP_KERNEL);
         n->right->size = n->size / 2;
-        ret = alloc(n->left, size, addr);
+        if(alloc(n->left, size, addr) == 0)
+            ret = 0;
     }
-    else if(n->left->full == true)
-    {
-        ret = alloc(n->right, size, addr + n->right->size);
-    }
-    else
-    {
-        ret = alloc(n->left->right, size, addr);
-        if(ret == -1)
-            ret = alloc(n->right, size, addr + n->right->size);
-    }
+
+    if(ret != 0 && n->left->full != true)
+        if(alloc(n->left, size, addr) == 0)
+            ret = 0;
+
+    if(ret != 0 && alloc(n->right, size, addr + n->left->size) == 0)
+        ret = 0;
+
+    if(n->left->full && n->right->full)
+        n->full = true;
+
     return ret;
 }
 
@@ -92,7 +95,7 @@ void print_tree(struct node *root)
     }
 }
 
-int init_module(void)
+int __init init_module(void)
 {
     int i, ret;
     struct page *mem = alloc_pages(GFP_KERNEL, NUM_PAGES);
@@ -118,8 +121,9 @@ int init_module(void)
             break;
         }
     }
-    print_tree(root);
 
+    print_tree(root);
+    
     printk("Internal fragmentation: %d bytes out of %lu bytes.\n", int_frag, TOTAL_MEM);
 
     return 0;
@@ -135,7 +139,7 @@ void delete_tree(struct node *root)
     kfree(root);
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     delete_tree(root);
     free_pages((unsigned long) addr, NUM_PAGES);
@@ -144,3 +148,6 @@ void cleanup_module(void)
 
 module_param_array(arr, int, &num_ele, S_IRUSR | S_IWUSR);
 MODULE_PARM_DESC(arr, "an integer array");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

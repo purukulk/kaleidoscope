@@ -1,4 +1,4 @@
-#include<linux/module.h>
+#include <linux/module.h>
 
 int init_module(void)
 {
@@ -9,5 +9,8 @@ int init_module(void)
 
 void cleanup_module(void)
 {
-    printk(KERN_INFO "Exiting module...\n"); 
+    printk(KERN_INFO "Exiting module...\n");
 }
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

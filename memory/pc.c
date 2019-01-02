@@ -1,15 +1,19 @@
-#include<linux/module.h>
-#include<linux/mm_types.h>
-#include<linux/pid.h>
-#include<linux/sched.h>
+#include <linux/mm_types.h>
+#include <linux/module.h>
+#include <linux/pid.h>
+#include <linux/sched.h>
 
 int ppid, cpid;
 
-int init_module(void)
+int __init init_module(void)
 {
-	int vma_count, vma_size, vss;
+    int vma_count, vma_size, vss;
     struct task_struct *parent = pid_task(find_get_pid(ppid), PIDTYPE_PID);
     struct task_struct *child = pid_task(find_get_pid(cpid), PIDTYPE_PID);
+    struct mm_struct *pmm;
+    struct vm_area_struct *pmmap;
+    struct mm_struct *cmm;
+    struct vm_area_struct *cmmap;
 
     if(!parent || !child)
     {
@@ -17,10 +21,10 @@ int init_module(void)
         return 0;
     }
 
-    struct mm_struct *pmm = parent->mm;
-    struct vm_area_struct *pmmap = pmm->mmap;
-    struct mm_struct *cmm = child->mm;
-    struct vm_area_struct *cmmap = cmm->mmap;
+    pmm = parent->mm;
+    pmmap = pmm->mmap;
+    cmm = child->mm;
+    cmmap = cmm->mmap;
 
     printk(KERN_INFO "Parent: name: %s, pid: %d\n", parent->comm, parent->pid);
     printk(KERN_INFO "Child: name: %s, pid: %d\n", child->comm, child->pid);
@@ -31,7 +35,8 @@ int init_module(void)
     {
         vma_size = pmmap->vm_end - pmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end, vma_size);
+        printk("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end,
+               vma_size);
         vss += vma_size;
         pmmap = pmmap->vm_next;
     } while(pmmap != NULL);
@@ -43,7 +48,8 @@ int init_module(void)
     {
         vma_size = cmmap->vm_end - cmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end, vma_size);
+        printk("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end,
+               vma_size);
         vss += vma_size;
         cmmap = cmmap->vm_next;
     } while(cmmap != NULL);
@@ -52,7 +58,7 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module!\n");
 }
@@ -61,4 +67,6 @@ module_param(ppid, int, 00600);
 MODULE_PARM_DESC(ppid, "an integer variable");
 module_param(cpid, int, 00600);
 MODULE_PARM_DESC(cpid, "an integer variable");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_LICENSE("GPL v2");

@@ -1,6 +1,6 @@
-#include<linux/module.h>
-#include<linux/random.h>
-#include<linux/slab.h>
+#include <linux/module.h>
+#include <linux/random.h>
+#include <linux/slab.h>
 
 int n;
 
@@ -11,7 +11,7 @@ struct info
     struct list_head list;
 };
 
-int init_module(void)
+int __init init_module(void)
 {
     int i;
     static LIST_HEAD(info_list);
@@ -25,7 +25,7 @@ int init_module(void)
         INIT_LIST_HEAD(&node->list);
 
         list_add_tail(&node->list, &info_list);
-        
+
         printk(KERN_INFO "Inserted: num: %lu, sqrt: %lu\n", node->num, node->sqrt);
     }
 
@@ -37,10 +37,13 @@ int init_module(void)
 
     return 0;
 }
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module...\n");
 }
 
 module_param(n, int, 00600);
 MODULE_PARM_DESC(n, "an integer variable");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

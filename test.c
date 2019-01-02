@@ -1,8 +1,8 @@
-#include<linux/kernel.h>
-#include<linux/module.h>
-#include<linux/moduleparam.h>
-#include<linux/stat.h>
-#include<linux/types.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+#include <linux/stat.h>
+#include <linux/types.h>
 
 int pid;
 unsigned char c;
@@ -19,3 +19,6 @@ void cleanup_module(void)
 
 module_param(pid, int, S_IRWXU);
 module_param(c, unsigned char, S_IRWXU);
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

@@ -1,13 +1,9 @@
+#include <linux/delay.h>
+#include <linux/module.h>
+#include <linux/sched.h>
+#include <linux/sched/signal.h>
 
-// Linux Kaleidoscope v0.1 
-// Ex. 6.1
-
-#include<linux/module.h>
-#include<linux/sched.h>
-#include<linux/sched/signal.h>
-#include<linux/delay.h>
-
-int init_module(void)
+int __init init_module(void)
 {
     int count, kcount;
     struct task_struct *task;
@@ -24,7 +20,10 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module!\n");
 }
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

@@ -12,7 +12,7 @@
 
 int pid;
 
-int init_module(void)
+int __init init_module(void)
 {
     unsigned long rss, lrss, address;
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
@@ -25,6 +25,9 @@ int init_module(void)
     pud_t *pud;
     pmd_t *pmd;
     pte_t *pte;
+
+    if(task == NULL)
+        return -1;
 
     rss = get_mm_rss(mm);
     printk(KERN_INFO "Task: name: %s, pid: %d\n", task->comm, task->pid);
@@ -61,7 +64,7 @@ int init_module(void)
             address += PAGE_SIZE;
 
         } while(address < mmap->vm_end);
-        printk("lrss: %lu\n", lrss/1024);
+        printk("lrss: %lu\n", lrss / 1024);
         rss += lrss;
         mmap = mmap->vm_next;
     } while(mmap != NULL);
@@ -71,11 +74,13 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module!\n");
 }
 
 module_param(pid, int, 00600);
 MODULE_PARM_DESC(pid, "an integer variable");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_LICENSE("GPL v2");

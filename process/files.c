@@ -1,37 +1,39 @@
-#include<linux/module.h>
-#include<linux/sched.h>
-#include<linux/sched/signal.h>
-#include<linux/fdtable.h>
+#include <linux/fdtable.h>
+#include <linux/module.h>
+#include <linux/sched.h>
+#include <linux/sched/signal.h>
 
 int pid;
 
-int init_module(void)
+int __init init_module(void)
 {
-    int i;
-    struct task_struct *task;
+    int i = 0;
+    struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
     struct files_struct *files;
-    //struct file *file;
+    struct fdtable *fdt;
 
-    for_each_process(task)
+    if(task == NULL)
+        return -1;
+
+    files = task->files;
+    fdt = files->fdt;
+
+    while(fdt->fd[i] != NULL)
     {
-        if(task->pid == pid)
-        {
-            files = task->files;
-            for(i = 0; i < files->count.counter; i++)
-            {
-                printk(KERN_INFO "%s\n", files->fd_array[i]->f_path.dentry->d_iname);
-            }
-            break;
-        }
+        printk(KERN_INFO "%s\n", fdt->fd[i]->f_path.dentry->d_iname);
+        i++;
     }
 
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module!\n");
 }
 
 module_param(pid, int, 00600);
 MODULE_PARM_DESC(pid, "an integer variable");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

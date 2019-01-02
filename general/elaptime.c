@@ -12,7 +12,7 @@ struct info
     struct list_head list;
 };
 
-int init_module(void)
+int __init init_module(void)
 {
     int i, t, avg;
     static LIST_HEAD(info_list);
@@ -32,7 +32,7 @@ int init_module(void)
         getnstimeofday(&t2);
 
         t = t2.tv_nsec - t1.tv_nsec;
-        printk("Time taken to insert node #%i: %d usecs", i+1, t);
+        printk("Time taken to insert node #%i: %d usecs", i + 1, t);
 
         avg += t;
     }
@@ -44,10 +44,13 @@ int init_module(void)
 
     return 0;
 }
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module...\n");
 }
 
 module_param(n, int, 00600);
 MODULE_PARM_DESC(n, "an integer variable");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");

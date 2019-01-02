@@ -5,7 +5,7 @@
 int arr[ARR_LEN];
 int num_ele;
 
-int init_module(void)
+int __init init_module(void)
 {
     int i;
     if(num_ele != ARR_LEN)
@@ -18,10 +18,13 @@ int init_module(void)
     return 0;
 }
 
-void cleanup_module(void)
+void __exit cleanup_module(void)
 {
     printk(KERN_INFO "Exiting module...\n");
 }
 
 module_param_array(arr, int, &num_ele, S_IRUSR | S_IWUSR);
 MODULE_PARM_DESC(arr, "an integer array");
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_LICENSE("GPL v2");
