@@ -1,17 +1,22 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
-int __init hi(void)
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 1");
+MODULE_LICENSE("GPL v2");
+
+static int __init hi(void)
 {
-    printk(KERN_INFO "Hello World!\n");
+    pr_info("Name: <your name goes here>\n");
+    pr_info("Email ID: <your email ID goes here>\n");
     return 0;
 }
-void __exit bye(void)
+
+static void __exit bye(void)
 {
-    printk(KERN_INFO "Goodbye World!\n");
+    pr_info("Exiting module...\n");
 }
 
 module_init(hi);
 module_exit(bye);
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
