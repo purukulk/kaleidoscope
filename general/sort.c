@@ -1,46 +1,58 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
+
 #include <linux/sort.h>
 
-#define ARR_LEN 10
+#define LEN 10
 
-int arr[ARR_LEN];
-int num_ele;
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 8");
+MODULE_LICENSE("GPL v2");
+
+static int arr[LEN];
+static int size;
 
 int cmp_func(const void *a, const void *b)
 {
-    if(*(int *) a < *(int *) b)
-        return 1;
-    else if(*(int *) a > *(int *) b)
-        return -1;
-    else
-        return 0;
-}
-
-int __init init_module(void)
-{
-    int i;
-    if(num_ele != ARR_LEN)
-    {
-        printk("Error: exactly 10 ints reqiured!\n");
-        return 0;
-    }
-    for(i = 0; i < ARR_LEN; i++)
-        printk("%d: %d\n", i, arr[i]);
-    sort(arr, ARR_LEN, sizeof(int), &cmp_func, NULL);
-    printk("After sorting:\n");
-    for(i = 0; i < ARR_LEN; i++)
-        printk("%d: %d\n", i, arr[i]);
-
+    if (*(const int *)a < *(const int *)b) return -1;
+    if (*(const int *)a > *(const int *)b) return 1;
     return 0;
 }
 
-void __exit cleanup_module(void)
+/**
+ * Pass name, type and reference to variable that
+ * will store number of arguments passed
+*/
+module_param_array(arr, int, &size, 0000);
+MODULE_PARM_DESC(arr, "Integer array");
+
+static int __init array_init(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    int i;
+    if (size != LEN)
+    {
+        pr_err("Exactly %d integers required!", LEN);
+    }
+    else
+    {
+        pr_info("Before sorting...");
+        for(i = 0; i < LEN; ++i)
+            pr_info("%d: %d", i, arr[i]);
+
+        sort(arr, LEN, sizeof(int), &cmp_func, NULL);
+
+        pr_info("After sorting...");
+        for(i = 0; i < LEN; ++i)
+            pr_info("%d: %d", i, arr[i]);
+    }
+    return 0;
 }
 
-module_param_array(arr, int, &num_ele, S_IRUSR | S_IWUSR);
-MODULE_PARM_DESC(arr, "an integer array");
+static void __exit array_exit(void)
+{
+    pr_info("Exiting module...\n");
+}
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(array_init);
+module_exit(array_exit);
