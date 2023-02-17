@@ -5,12 +5,16 @@
 #define LEN 10
 
 MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
-MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 2");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 7");
 MODULE_LICENSE("GPL v2");
 
 static int arr[LEN];
 static int size;
 
+/**
+ * Pass name, type and reference to variable that
+ * will store number of arguments passed
+*/
 module_param_array(arr, int, &size, 0000);
 MODULE_PARM_DESC(arr, "Integer array");
 
