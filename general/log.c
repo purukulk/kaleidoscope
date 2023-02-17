@@ -1,23 +1,28 @@
-#include <linux/kern_levels.h>
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
-int init_module(void)
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 2");
+MODULE_LICENSE("GPL v2");
+
+static int __init log_init(void)
 {
-    printk(KERN_EMERG "EMERG String!!");
-    printk(KERN_ALERT "ALERT String!!");
-    printk(KERN_CRIT "CRIT String!!");
-    printk(KERN_ERR "ERR String!!");
-    printk(KERN_WARNING "WARNING String!!");
-    printk(KERN_NOTICE "NOTICE String!!");
-    printk(KERN_INFO "INFO String!!");
-    printk(KERN_DEBUG "DEBUG String!!");
+    pr_emerg("KERN_EMERG log level <0>");
+    pr_alert("KERN_ALERT log level <1>");
+    pr_crit("KERN_CRIT log level <2>");
+    pr_err("KERN_ERR log level <3>");
+    pr_warn("KERN_WARN log level <4>");
+    pr_notice("KERN_NOTICE log level <5>");
+    pr_info("KERN_INFO log level <6>");
+    pr_debug("KERN_DEBUG log level <7>");
     return 0;
 }
 
-void cleanup_module(void)
+static void __exit log_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(log_init);
+module_exit(log_exit);
