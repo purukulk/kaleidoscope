@@ -6,6 +6,11 @@ MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 2");
 MODULE_LICENSE("GPL v2");
 
+/**
+ * You need to be logged in to a tty to see the messages.
+ * Try Ctrl + Alt + F3 for tty3
+*/
+
 static int __init log_init(void)
 {
     pr_emerg("KERN_EMERG log level <0>");
