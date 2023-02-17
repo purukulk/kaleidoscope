@@ -1,17 +1,31 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
-int __init init_module(void)
+/* Required for the linux version code macro */
+#include <generated/uapi/linux/version.h>
+
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 5 (requires a custom kernel to be built)");
+MODULE_LICENSE("GPL v2");
+
+static int __init decode_init(void)
 {
-    printk(KERN_INFO "Entering module...\n");
+    int a, b, c;
+    int code = LINUX_VERSION_CODE;
+    a = code / (1 << 16);
+    code = code % (1 << 16);
+    b = code / (1 << 8);
+    code = code % (1 << 8);
+    c = code;
+    pr_info("Kernel version %d.%d.%d decoded from LINUX_VERSION_CODE macro!", a, b, c);
     return 0;
 }
-void __exit cleanup_module(void)
+
+static void __exit decode_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_DESCRIPTION("does nothing!");
-MODULE_VERSION("1.0");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(decode_init);
+module_exit(decode_exit);
