@@ -1,49 +1,55 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/random.h>
 #include <linux/slab.h>
 
-int n;
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 9");
+MODULE_LICENSE("GPL v2");
 
-struct info
+static struct info
 {
     unsigned long num;
     unsigned long sqrt;
     struct list_head list;
-};
+} *entry, *n;
 
-int __init init_module(void)
+static int len;
+module_param(len, int, 0000);
+MODULE_PARM_DESC(len, "Number of nodes to add to the linked list");
+
+static int __init list_init(void)
 {
     int i;
-    static LIST_HEAD(info_list);
-    struct info *node, *next;
+    struct list_head info_list;
+    INIT_LIST_HEAD(&info_list);
 
-    for(i = 0; i < n; i++)
+    for (i = 0; i < len; ++i)
     {
-        node = kmalloc(sizeof(struct info), GFP_KERNEL);
-        node->num = get_random_long();
-        node->sqrt = int_sqrt(node->num);
-        INIT_LIST_HEAD(&node->list);
+        entry = kmalloc(sizeof(struct info *), GFP_KERNEL);
+        entry->num = get_random_long();
+        entry->sqrt = int_sqrt(entry->num);
+        INIT_LIST_HEAD(&entry->list);
 
-        list_add_tail(&node->list, &info_list);
+        list_add_tail(&entry->list, &info_list);
 
-        printk(KERN_INFO "Inserted: num: %lu, sqrt: %lu\n", node->num, node->sqrt);
+        pr_info("Added entry: num = %lu, sqrt = %lu\n", entry->num, entry->sqrt);
     }
 
-    list_for_each_entry_safe_reverse(node, next, &info_list, list)
+    list_for_each_entry_safe_reverse(entry, n, &info_list, list)
     {
-        printk(KERN_INFO "Deleted: num: %lu, sqrt: %lu\n", node->num, node->sqrt);
-        kfree(node);
+        pr_info("Deleted entry: num = %lu, sqrt = %lu\n", entry->num, entry->sqrt);
+        kfree(entry);
     }
 
     return 0;
 }
-void __exit cleanup_module(void)
+
+static void __exit list_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(n, int, 00600);
-MODULE_PARM_DESC(n, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(list_init);
+module_exit(list_exit);
