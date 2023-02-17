@@ -15,6 +15,10 @@ MODULE_PARM_DESC(b, "Second integer variable to be compared");
 module_param(c, int, 0660);
 MODULE_PARM_DESC(c, "Third integer variable to be compared");
 
+/**
+ * Example usage would be: sudo insmod minmax3.ko a=5 b=2 c=7
+*/
+
 static int __init minmax_init(void)
 {
     pr_info("Smallest value: %d\n", min3(a, b, c));
