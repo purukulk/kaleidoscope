@@ -1,6 +1,6 @@
-#include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include <asm/page_types.h>
 
 MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");

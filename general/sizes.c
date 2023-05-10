@@ -1,21 +1,27 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
-int init_module(void)
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4");
+MODULE_LICENSE("GPL v2");
+
+static int __init sizes_init(void)
 {
-    printk(KERN_INFO "char: %lu\n", sizeof(char));
-    printk(KERN_INFO "bool: %lu\n", sizeof(bool));
-    printk(KERN_INFO "short: %lu\n", sizeof(short));
-    printk(KERN_INFO "int: %lu\n", sizeof(int));
-    printk(KERN_INFO "long: %lu\n", sizeof(long));
-    printk(KERN_INFO "long long: %lu\n", sizeof(long long));
-    printk(KERN_INFO "void *: %lu\n", sizeof(void *));
+    pr_info("char: %lu\n", sizeof(char));
+    pr_info("bool: %lu\n", sizeof(bool));
+    pr_info("short: %lu\n", sizeof(short));
+    pr_info("int: %lu\n", sizeof(int));
+    pr_info("long: %lu\n", sizeof(long));
+    pr_info("long long: %lu\n", sizeof(long long));
+    pr_info("void *: %lu\n", sizeof(void *));
     return 0;
 }
 
-void cleanup_module(void)
+static void __exit sizes_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(sizes_init);
+module_exit(sizes_exit);
