@@ -1,5 +1,11 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/slab.h>
+
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 14");
+MODULE_LICENSE("GPL v2");
 
 #define WORD_SIZE 64
 #define LEN_STR WORD_SIZE + 16
@@ -37,7 +43,7 @@ char *long_to_binary(unsigned long dec)
     return bin;
 }
 
-int __init init_module(void)
+static int __init cr_init(void)
 {
     unsigned long cr0, cr2, cr3, cr4, cr8;
     asm volatile("mov %%cr0,%0\n\t" : "=r"(cr0));
@@ -45,20 +51,19 @@ int __init init_module(void)
     asm volatile("mov %%cr3,%0\n\t" : "=r"(cr3));
     asm volatile("mov %%cr4,%0\n\t" : "=r"(cr4));
     asm volatile("movq %%cr8,%0" : "=r"(cr8));
-    printk("CR0: 0x%lx, CR2: 0x%lx, CR3: 0x%lx, CR4: 0x%lx, CR8: 0x%lx\n", cr0, cr2, cr3,
-           cr4, cr8);
-    printk("CR0: %s\n", long_to_binary(cr0));
-    printk("CR2: %s\n", long_to_binary(cr2));
-    printk("CR3: %s\n", long_to_binary(cr3));
-    printk("CR4: %s\n", long_to_binary(cr4));
-    printk("CR8: %s\n", long_to_binary(cr8));
+    pr_info("CR0: 0x%lx, CR2: 0x%lx, CR3: 0x%lx, CR4: 0x%lx, CR8: 0x%lx\n", cr0, cr2, cr3, cr4, cr8);
+    pr_info("CR0: %s\n", long_to_binary(cr0));
+    pr_info("CR2: %s\n", long_to_binary(cr2));
+    pr_info("CR3: %s\n", long_to_binary(cr3));
+    pr_info("CR4: %s\n", long_to_binary(cr4));
+    pr_info("CR8: %s\n", long_to_binary(cr8));
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit cr_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(cr_init);
+module_exit(cr_exit);

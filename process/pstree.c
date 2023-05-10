@@ -1,30 +1,34 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/pid.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 8");
+MODULE_LICENSE("GPL v2");
+
+static int pid;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID for process");
 
 void go_down(struct task_struct *task, int level)
 {
     struct task_struct *t;
 
-    if(level == 6)
-        return;
-
-    if(level == 0)
-        printk("%s (%d)\n", task->comm, task->pid);
-    else if(level == 1)
-        printk("-%s (%d)\n", task->comm, task->pid);
-    else if(level == 2)
-        printk("--%s (%d)\n", task->comm, task->pid);
-    else if(level == 3)
-        printk("---%s (%d)\n", task->comm, task->pid);
+    if (level == 0)
+        pr_info("%s (%d)\n", task->comm, task->pid);
+    else if (level == 1)
+        pr_info("-%s (%d)\n", task->comm, task->pid);
+    else if (level == 2)
+        pr_info("--%s (%d)\n", task->comm, task->pid);
+    else if (level == 3)
+        pr_info("---%s (%d)\n", task->comm, task->pid);
     else if(level == 4)
-        printk("----%s (%d)\n", task->comm, task->pid);
-    else if(level == 5)
-        printk("-----%s (%d)\n", task->comm, task->pid);
-
+        pr_info("----%s (%d)\n", task->comm, task->pid);
+    else if (level == 5)
+        pr_info("-----%s (%d)\n", task->comm, task->pid);
+    else
+        return;
 
     list_for_each_entry(t, &task->children, sibling)
     {
@@ -32,25 +36,22 @@ void go_down(struct task_struct *task, int level)
     }
 }
 
-int __init init_module(void)
+static int __init pstree_init(void)
 {
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
 
-    if(task == NULL)
-        return -1;
+    if (task == NULL)
+        return -ESRCH;
 
     go_down(task, 0);
 
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit pstree_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(pstree_init);
+module_exit(pstree_exit);

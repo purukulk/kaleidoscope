@@ -1,17 +1,28 @@
-#include<linux/module.h>
-#include<linux/sched.h>
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/sched.h>
 
-int init_module(void)
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 15");
+MODULE_LICENSE("GPLv2");
+
+static int __init current_init(void)
 {
     struct task_struct *ret = NULL;
-    asm("andl $0xffffe000, %%esp\n\t" : "=r" (ret));
-    if(ret == NULL)
+    asm ("andl $0xffffe000, %%esp\n\t" : "=r" (ret));
+
+    if (ret == NULL)
         return 0;
-    printk("Ret Name: %s\n", ret->comm);
+
+    pr_info("Ret Name: %s\n", ret->comm);
     return 0;
 }
 
-void cleanup_module(void)
+static void __exit current_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n"); 
+    pr_info("Exiting module...\n"); 
 }
+
+module_init(current_init);
+module_exit(current_exit);

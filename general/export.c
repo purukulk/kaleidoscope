@@ -1,21 +1,26 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
+
+MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 13");
+MODULE_LICENSE("GPL v2");
 
 int myval;
+module_param(myval, int, 00600);
+MODULE_PARM_DESC(myval, "an integer variable");
 EXPORT_SYMBOL(myval);
 
-int __init init_module(void)
+static int __init export_init(void)
 {
-    printk(KERN_INFO "Entering module...\n");
+    pr_info("Entering module export...\n");
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit export_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module export...\n");
 }
 
-module_param(myval, int, 00600);
-MODULE_PARM_DESC(myval, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(export_init);
+module_exit(export_exit);

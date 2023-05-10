@@ -1,49 +1,48 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 4");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int pid = 0;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID of process whose family is to be printed");
+
+static int __init family_init(void)
 {
     struct task_struct *task, *i;
 
-    for_each_process(task)
-    {
-        if(task->pid == pid)
-            break;
-    }
+    task = pid_task(find_get_pid(pid), PIDTYPE_PID);
+    pr_info("Current: name: %s, pid: %d", task->comm, task->pid);
 
     i = task;
-
-    printk(KERN_INFO "Current: name: %s, pid: %d", task->comm, task->pid);
     do
     {
         i = i->parent;
-        printk(KERN_INFO "Parent: name: %s, pid: %d\n", i->comm, i->pid);
+        pr_info("Parent: name: %s, pid: %d\n", i->comm, i->pid);
 
     } while(i->pid != 0);
 
     list_for_each_entry(i, &task->parent->children, sibling)
     {
-        printk(KERN_INFO "Sibling: name: %s, pid: %d\n", i->comm, i->pid);
+        pr_info("Sibling: name: %s, pid: %d\n", i->comm, i->pid);
     }
 
     list_for_each_entry(i, &task->children, sibling)
     {
-        printk(KERN_INFO "Children: name: %s, pid: %d\n", i->comm, i->pid);
+        pr_info("Children: name: %s, pid: %d\n", i->comm, i->pid);
     }
 
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit family_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(family_init);
+module_exit(family_exit);

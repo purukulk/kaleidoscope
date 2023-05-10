@@ -1,44 +1,43 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 7");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int pid;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID of process");
+
+static int __init rename_init(void)
 {
     struct task_struct *task;
 
     for_each_process(task)
     {
-        if(task->pid == pid)
+        if (task->pid == pid)
             break;
     }
 
-    if(task == &init_task)
-        return -1;
+    if (task == &init_task)
+        return -EPERM;
 
-    printk(KERN_INFO "Current: name: %s, pid: %d", task->comm, task->pid);
-
-    // set_task_comm(task, "hellooo");
+    pr_info("Current: name: %s, pid: %d", task->comm, task->pid);
 
     task_lock(task);
-
-    strcpy(task->comm, "hellooo");
-
+    strcpy(task->comm, "ola");
     task_unlock(task);
 
-    printk(KERN_INFO "Current: name: %s, pid: %d", task->comm, task->pid);
-
+    pr_info("Current: name: %s, pid: %d", task->comm, task->pid);
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit rename_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(rename_init);
+module_exit(rename_exit);

@@ -1,36 +1,37 @@
-#include <linux/mm.h>
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/pid.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 13");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int pid;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID of process");
+
+static int __init sighand_init(void)
 {
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
     void (*sighandler)(int);
 
-    if(task == NULL)
-        return -1;
+    if (task == NULL)
+        return -ESRCH;
 
-    printk(KERN_INFO "Process: name: %s, pid: %d\n", task->comm, task->pid);
+    pr_info("Process: name: %s, pid: %d\n", task->comm, task->pid);
 
     sighandler = task->sighand->action[SIGUSR1 - 1].sa.sa_handler;
-    task->sighand->action[SIGUSR1 - 1].sa.sa_handler =
-        task->sighand->action[SIGUSR2 - 1].sa.sa_handler;
+    task->sighand->action[SIGUSR1 - 1].sa.sa_handler = task->sighand->action[SIGUSR2 - 1].sa.sa_handler;
     task->sighand->action[SIGUSR2 - 1].sa.sa_handler = sighandler;
 
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit sighand_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(sighand_init);
+module_exit(sighand_exit);
