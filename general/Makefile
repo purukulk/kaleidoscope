@@ -1,4 +1,4 @@
-obj-m += sizes.o
+obj-m += datetime.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules

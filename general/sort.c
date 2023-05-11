@@ -5,7 +5,7 @@
 
 #define LEN 10
 
-MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 8");
 MODULE_LICENSE("GPL v2");
 

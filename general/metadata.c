@@ -5,7 +5,7 @@
 /* Required for the linux version code macro */
 #include <generated/uapi/linux/version.h>
 
-MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 5 (requires a custom kernel to be built)");
 MODULE_LICENSE("GPL v2");
 

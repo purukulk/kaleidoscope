@@ -3,7 +3,7 @@
 #include <linux/module.h>
 #include <linux/pid.h>
 
-MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 1");
 MODULE_LICENSE("GPL v2");
 

@@ -3,7 +3,7 @@
 #include <linux/kernel.h>
 #include <linux/sched.h>
 
-MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 15");
 MODULE_LICENSE("GPLv2");
 

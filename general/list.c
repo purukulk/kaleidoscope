@@ -4,7 +4,7 @@
 #include <linux/random.h>
 #include <linux/slab.h>
 
-MODULE_AUTHOR("Aditya Sriram <aweditya@gmail.com>");
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
 MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 9");
 MODULE_LICENSE("GPL v2");
 
