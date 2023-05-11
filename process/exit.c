@@ -1,39 +1,44 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 16");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int pid = 0;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID of process");
+
+static int __init exit_init(void)
 {
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
 
-    if(task == NULL)
-        return -1;
+    if (task == NULL)
+        return -ESRCH;
 
-    printk(KERN_INFO "Process: name: %s, pid: %d\n", task->comm, task->pid);
+    pr_info("Process: name: %s, pid: %d\n", task->comm, task->pid);
 
     task_lock(task);
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit exit_exit(void)
 {
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
     
-    if(task == NULL)
+    if (task == NULL)
         return;
     
-    printk("exit_state: %d\n", task->exit_state);
-    printk("exit_code: %d\n", task->exit_code);
-    printk("exit_signal: %d\n", task->exit_signal);
-    printk("pdeath_signal: %d\n", task->pdeath_signal);
+    pr_info("exit_state: %d\n", task->exit_state);
+    pr_info("exit_code: %d\n", task->exit_code);
+    pr_info("exit_signal: %d\n", task->exit_signal);
+    pr_info("pdeath_signal: %d\n", task->pdeath_signal);
+
     task_unlock(task);
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(exit_init);
+module_exit(exit_exit);
