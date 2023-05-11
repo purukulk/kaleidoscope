@@ -1,24 +1,32 @@
-#include<linux/module.h>
-#include<linux/mm_types.h>
-#include<linux/pid.h>
-#include<linux/sched.h>
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/mm_types.h>
+#include <linux/sched.h>
+#include <asm/io.h>
+
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 7");
+MODULE_LICENSE("GPL v2");
 
 char str[4096];
 char str2[] = "Bhatnagar";
 EXPORT_SYMBOL(str);
 
-int init_module(void)
+static int __init read_kmem_init(void)
 {
-    printk(KERN_INFO "Entering module!\n");
+    pr_info("Entering module...\n");
     strcpy(str, "Sukrit");
-    printk("Address of the string: %lu %lu\n", (unsigned long) str, (unsigned long) virt_to_phys(str));
-    printk("Address of the string2: %lu %lu\n", (unsigned long) str2, (unsigned long) virt_to_phys(str2));
+
+    pr_info("Address of the string: %s %lu\n", str, (unsigned long) virt_to_phys(str));
+    pr_info("Address of the string2: %s %lu\n", str2, (unsigned long) virt_to_phys(str2));
     return 0;
 }
 
-void cleanup_module(void)
+static void __exit read_kmem_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_LICENSE("GPL v2");
+module_init(read_kmem_init);
+module_exit(read_kmem_exit);

@@ -46,7 +46,7 @@ static int __init pc_init(void)
     {
         vma_size = pmmap->vm_end - pmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end, vma_size);
+        pr_info("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end, vma_size);
         vss += vma_size;
         pmmap = pmmap->vm_next;
     } while(pmmap != NULL);
@@ -58,7 +58,7 @@ static int __init pc_init(void)
     {
         vma_size = cmmap->vm_end - cmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end, vma_size);
+        pr_info("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end, vma_size);
         vss += vma_size;
         cmmap = cmmap->vm_next;
     } while(cmmap != NULL);

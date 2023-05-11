@@ -20,7 +20,7 @@ static int pid;
 module_param(pid, int, 00600);
 MODULE_PARM_DESC(pid, "PID of process");
 
-static int __init mmap_init(void)
+static int __init hello(void)
 {
     unsigned long address;
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
@@ -81,10 +81,10 @@ static int __init mmap_init(void)
     return 0;
 }
 
-static void __exit mmap_exit(void)
+static void __exit bye(void)
 {
     pr_info("Exiting module...\n");
 }
 
-module_init(mmap_init);
-module_exit(mmap_exit);
+module_init(hello);
+module_exit(bye);

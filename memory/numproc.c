@@ -19,14 +19,14 @@ static int __init numproc_init(void)
         if(task->mm)
             kcount++;
     }
-    printk(KERN_INFO "Total count = %d\n", count);
-    printk(KERN_INFO "Kernel count = %d\n", kcount);
+    pr_info("Total count = %d\n", count);
+    pr_info("Kernel count = %d\n", kcount);
     return 0;
 }
 
 static void __exit numproc_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module!\n");
 }
 
 module_init(numproc_init);
