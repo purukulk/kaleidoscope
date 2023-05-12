@@ -1,29 +1,35 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/moduleparam.h>
-#include <linux/stat.h>
-#include <linux/types.h>
-
-int a, b, c;
-
-int __init init_module(void)
-{
-    printk(KERN_INFO "smallest value: %d\n", min3(a, b, c));
-    printk(KERN_INFO "largest value: %d\n", max3(a, b, c));
-    return 0;
-}
-void __exit cleanup_module(void)
-{
-    printk(KERN_INFO "Exiting module...\n");
-}
-
-module_param(a, int, S_IRUSR | S_IWUSR);
-MODULE_PARM_DESC(a, "an integer variable");
-module_param(b, int, 00600);
-MODULE_PARM_DESC(b, "another integer variable");
-module_param(c, int, 00600);
-MODULE_PARM_DESC(c, "yet another integer variable");
 
 MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 6");
 MODULE_LICENSE("GPL v2");
+
+/* Module parameters */
+static int a, b, c;
+module_param(a, int, 0660);
+MODULE_PARM_DESC(a, "First integer variable to be compared");
+module_param(b, int, 0660);
+MODULE_PARM_DESC(b, "Second integer variable to be compared");
+module_param(c, int, 0660);
+MODULE_PARM_DESC(c, "Third integer variable to be compared");
+
+/**
+ * Example usage would be: sudo insmod minmax3.ko a=5 b=2 c=7
+*/
+
+static int __init minmax_init(void)
+{
+    pr_info("Smallest value: %d\n", min3(a, b, c));
+    pr_info("Largest value: %d\n", max3(a, b, c));
+    return 0;
+}
+
+static void __exit minmax_exit(void)
+{
+    pr_info("Exiting module...\n");
+}
+
+module_init(minmax_init);
+module_exit(minmax_exit);

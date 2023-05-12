@@ -1,16 +1,22 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>
 
-int __init init_module(void)
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 2");
+MODULE_LICENSE("GPL v2");
+
+static int __init current_init(void)
 {
-    printk(KERN_INFO "pid: %d, name: %s\n", current->pid, current->comm);
+    pr_info(KERN_INFO "pid: %d, name: %s\n", current->pid, current->comm);
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit current_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(current_init);
+module_exit(current_exit);

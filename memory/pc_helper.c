@@ -5,18 +5,17 @@
 
 int main()
 {
-    int s;
     int pid = fork();
-    if(pid == 0)
+    if (pid == 0)
     {
-        //getchar();
-        //while(1);
-        //printf("exec executing now!\n");
+        printf("PID = %d\n", getpid());
+        printf("PPID = %d\n", getppid());
         execl("/bin/sleep", "/bin/sleep", "100000", NULL);
     }
-    printf("PID = %d\n", getpid());
-    wait(&s);
-    getchar();
+    else
+    {
+        wait(NULL);
+    }
 
     return 0;
 }

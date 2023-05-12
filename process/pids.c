@@ -1,37 +1,39 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/pid.h>
 #include <linux/sched.h>
 
-int pid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 14");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int pid;
+module_param(pid, int, 00600);
+MODULE_PARM_DESC(pid, "PID of process");
+
+static int __init pids_init(void)
 {
     struct task_struct *task = pid_task(find_get_pid(pid), PIDTYPE_PID);
 
     if(task == NULL)
-        return 0;
+       return -ESRCH;
 
-    printk(KERN_INFO "task->pid: %d, task->tgid: %d\n", task->pid, task->tgid);
-    printk(KERN_INFO "task->pids[PIDTYPE_PID]: %d\n",
-           task->pids[PIDTYPE_PID].pid->numbers[0].nr);
-    printk(KERN_INFO "task->group_leader->pid: %d\n", task->group_leader->pid);
-    printk(KERN_INFO "task->group_leader->pids[PIDTYPE_PID]: %d\n",
-           task->group_leader->pids[PIDTYPE_PID].pid->numbers[0].nr);
-    printk(KERN_INFO "task->group_leader->pids[PIDTYPE_PGID]: %d\n",
-           task->group_leader->pids[PIDTYPE_PGID].pid->numbers[0].nr);
-    printk(KERN_INFO "task->group_leader->pids[PIDTYPE_SID]: %d\n",
-           task->group_leader->pids[PIDTYPE_SID].pid->numbers[0].nr);
-
+    pr_info("task->pid: %d, task->tgid: %d\n", task->pid, task->tgid);
+    pr_info("task->thread_pid[PIDTYPE_PID]: %d\n", pid_nr(&task->thread_pid[PIDTYPE_PID]));
+    pr_info("task->thread_pid[PIDTYPE_PGID]: %d\n", pid_nr(&task->thread_pid[PIDTYPE_PGID]));
+    pr_info("task->thread_pid[PIDTYPE_SID]: %d\n", pid_nr(&task->thread_pid[PIDTYPE_SID]));
+    pr_info("task->group_leader->pid: %d\n", task->group_leader->pid);
+    pr_info("task->group_leader->thread_pid[PIDTYPE_PID]: %d\n", pid_nr(&task->group_leader->thread_pid[PIDTYPE_PID]));
+    pr_info("task->group_leader->thread_pid[PIDTYPE_PGID]: %d\n", pid_nr(&task->group_leader->thread_pid[PIDTYPE_PGID]));
+    pr_info("task->group_leader->thread_pid[PIDTYPE_SID]: %d\n", pid_nr(&task->group_leader->thread_pid[PIDTYPE_SID]));
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit pids_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param(pid, int, 00600);
-MODULE_PARM_DESC(pid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(pids_init);
+module_exit(pids_exit);

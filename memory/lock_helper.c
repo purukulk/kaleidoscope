@@ -14,7 +14,9 @@ int main()
     int i, p;
     srand(time(NULL));
     printf("Process started with pid %d\n", getpid());
+
     getchar();
+
     while(1)
     {
         llu *arr = calloc(LEN, sizeof(llu));
@@ -22,5 +24,6 @@ int main()
             arr[i] = rand();
         free(arr);
     }
+
     return 0;
 }

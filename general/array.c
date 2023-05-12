@@ -1,30 +1,42 @@
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
-#define ARR_LEN 10
+#define LEN 10
 
-int arr[ARR_LEN];
-int num_ele;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 4, Question 7");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int arr[LEN];
+static int size;
+
+/**
+ * Pass name, type and reference to variable that
+ * will store number of arguments passed
+*/
+module_param_array(arr, int, &size, 0000);
+MODULE_PARM_DESC(arr, "Integer array");
+
+static int __init array_init(void)
 {
     int i;
-    if(num_ele != ARR_LEN)
+    if (size != LEN)
     {
-        printk("Error: exactly 10 ints reqiured!\n");
-        return 0;
+        pr_err("Exactly %d integers required!", LEN);
     }
-    for(i = 0; i < ARR_LEN; i++)
-        printk("%d: %d\n", i, arr[i]);
+    else
+    {
+        for(i = 0; i < LEN; ++i)
+            pr_info("%d: %d", i, arr[i]);
+    }
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit array_exit(void)
 {
-    printk(KERN_INFO "Exiting module...\n");
+    pr_info("Exiting module...\n");
 }
 
-module_param_array(arr, int, &num_ele, S_IRUSR | S_IWUSR);
-MODULE_PARM_DESC(arr, "an integer array");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(array_init);
+module_exit(array_exit);

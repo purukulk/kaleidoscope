@@ -1,23 +1,34 @@
-#include <linux/mm_types.h>
+#include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/pid.h>
 #include <linux/sched.h>
 
-int ppid, cpid;
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 7, Question 4");
+MODULE_LICENSE("GPL v2");
 
-int __init init_module(void)
+static int ppid, cpid;
+module_param(ppid, int, 0600);
+MODULE_PARM_DESC(ppid, "PID of parent");
+module_param(cpid, int, 0600);
+MODULE_PARM_DESC(cpid, "PID of child");
+
+static int __init pc_init(void)
 {
     int vma_count, vma_size, vss;
     struct task_struct *parent = pid_task(find_get_pid(ppid), PIDTYPE_PID);
     struct task_struct *child = pid_task(find_get_pid(cpid), PIDTYPE_PID);
+
     struct mm_struct *pmm;
     struct vm_area_struct *pmmap;
+
     struct mm_struct *cmm;
     struct vm_area_struct *cmmap;
 
-    if(!parent || !child)
+    if (!parent || !child)
     {
-        printk("Error: invalid PID(s)!\n");
+        pr_err("Invalid PID(s)!\n");
         return 0;
     }
 
@@ -26,47 +37,40 @@ int __init init_module(void)
     cmm = child->mm;
     cmmap = cmm->mmap;
 
-    printk(KERN_INFO "Parent: name: %s, pid: %d\n", parent->comm, parent->pid);
-    printk(KERN_INFO "Child: name: %s, pid: %d\n", child->comm, child->pid);
+    pr_info("Parent: name: %s, pid: %d\n", parent->comm, parent->pid);
+    pr_info("Child: name: %s, pid: %d\n", child->comm, child->pid);
 
     vma_count = vss = 0;
-    printk("Parent's VMAs\n");
+    pr_info("Printing parent's VMAs...\n");
     do
     {
         vma_size = pmmap->vm_end - pmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end,
-               vma_size);
+        pr_info("[%d] %lu - %lu: %d\n", vma_count, pmmap->vm_start, pmmap->vm_end, vma_size);
         vss += vma_size;
         pmmap = pmmap->vm_next;
     } while(pmmap != NULL);
-    printk("Parent's VSS: %d\n", vss);
+    pr_info("Parent's VSS: %d\n", vss);
 
     vma_count = vss = 0;
-    printk("Child's VMAs\n");
+    pr_info("Printing child's VMAs...\n");
     do
     {
         vma_size = cmmap->vm_end - cmmap->vm_start;
         vma_count++;
-        printk("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end,
-               vma_size);
+        pr_info("[%d] %lu - %lu: %d\n", vma_count, cmmap->vm_start, cmmap->vm_end, vma_size);
         vss += vma_size;
         cmmap = cmmap->vm_next;
     } while(cmmap != NULL);
-    printk("Child's VSS: %d\n", vss);
+    pr_info("Child's VSS: %d\n", vss);
 
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit pc_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module!\n");
 }
 
-module_param(ppid, int, 00600);
-MODULE_PARM_DESC(ppid, "an integer variable");
-module_param(cpid, int, 00600);
-MODULE_PARM_DESC(cpid, "an integer variable");
-
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(pc_init);
+module_exit(pc_exit);

@@ -1,25 +1,30 @@
+#include <linux/init.h>
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/kernel.h>
 #include <linux/sched/signal.h>
 
-int __init init_module(void)
+MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
+MODULE_DESCRIPTION("Linux Kaleidoscope: Chapter 6, Question 3");
+MODULE_LICENSE("GPL v2");
+
+static int __init three_init(void)
 {
     struct task_struct *task;
 
-    printk(KERN_INFO "pid: %d, name: %s\n", init_task.pid, init_task.comm);
+    pr_info("pid: %d, name: %s\n", init_task.pid, init_task.comm);
     for_each_process(task)
     {
         if(task->pid < 3)
-            printk(KERN_INFO "Process: name: %s, pid: %d\n", task->comm, task->pid);
+            pr_info("Process: name: %s, pid: %d\n", task->comm, task->pid);
     }
 
     return 0;
 }
 
-void __exit cleanup_module(void)
+static void __exit three_exit(void)
 {
-    printk(KERN_INFO "Exiting module!\n");
+    pr_info("Exiting module!\n");
 }
 
-MODULE_AUTHOR("Sukrit Bhatnagar <skrtbhtngr@gmail.com>");
-MODULE_LICENSE("GPL v2");
+module_init(three_init);
+module_exit(three_exit);

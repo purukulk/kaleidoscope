@@ -1,13 +1,14 @@
-#include<errno.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include<sys/wait.h>
-#include<string.h>
-#include<unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
 
 void signal_handler(int sig)
 {
-    if(sig == 2)
+    if (sig == SIGINT)
         exit(EXIT_SUCCESS);
     else
         exit(3);
@@ -15,11 +16,13 @@ void signal_handler(int sig)
 
 int main()
 {
-    int i=10, p, s;
+    int i = 10, p, s;
+
     signal(SIGINT, &signal_handler);
     printf("pid: %d\n", getpid());
+
     p = fork();
-    if(p == 0)
+    if (p == 0)
     {
         printf("child pid: %d\n", getpid());
         while(i < 1000)
@@ -29,7 +32,10 @@ int main()
             sleep(1);
         }
     }
-    else if(p > 0)
+    else if (p > 0)
+    {
         wait(&s);
+    }
+
     return 0;
 }
